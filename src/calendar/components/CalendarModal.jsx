@@ -7,7 +7,8 @@ import Modal from "react-modal";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from "date-fns/locale/es";
-import { useUiStore } from "../../hooks";
+import { useCalendarStore, useUiStore } from "../../hooks";
+import { useEffect } from "react";
 
 registerLocale("es", es);
 
@@ -26,11 +27,12 @@ Modal.setAppElement("#root");
 
 export const CalendarModal = () => {
   const { isDateModalOpen, closeDateModal } = useUiStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formValues, setFormValues] = useState({
-    title: "Luis",
-    notes: "Benitez",
+    title: "",
+    notes: "",
     start: new Date(),
     end: addHours(new Date(), 1), // Fecha de fin inicializada correctamente
   });
@@ -39,6 +41,14 @@ export const CalendarModal = () => {
     if (!formSubmitted) return ""; // Si no se ha enviado el formulario, no hay clase
     return formValues.title.length > 0 ? "is-valid" : "is-invalid"; // Si el título está vacío, agrega la clase is-invalid
   }); // Dependencias para el efecto
+
+  useEffect(() => {
+    if (activeEvent !== null) {
+      setFormValues({
+        ...activeEvent,
+      });
+    }
+  }, [activeEvent]); // Dependencias para el efecto
 
   const onInputChange = ({ target }) => {
     setFormValues({
@@ -58,7 +68,7 @@ export const CalendarModal = () => {
     closeDateModal();
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault(); // Previene el comportamiento por defecto del formulario
     setFormSubmitted(true); // Marca el formulario como enviado
 
@@ -73,6 +83,10 @@ export const CalendarModal = () => {
     console.log(formValues);
 
     // TODO:
+    await startSavingEvent(formValues); // esta linea llama la funcikon que guarda el evento
+    closeDateModal();
+    setFormSubmitted(false); // Reinicia el estado del formulario
+
     // cerrar el modal
     // remover errores en pantalla
   };

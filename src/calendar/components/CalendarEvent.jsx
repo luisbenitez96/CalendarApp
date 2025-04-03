@@ -1,7 +1,5 @@
-import React from "react";
-
 export const CalendarEvent = ({ event }) => {
-  const { title, user, start, end } = event;
+  const { title, user } = event;
 
   return (
     <>
