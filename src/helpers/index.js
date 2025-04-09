@@ -1,3 +1,4 @@
 export * from "./CalendarLocalizer";
-export * from "./getMessage";
+export * from "./convertEventToDateEvents";
 export * from "./getEnvVariables";
+export * from "./getMessage";
