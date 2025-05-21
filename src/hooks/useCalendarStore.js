@@ -9,7 +9,6 @@ import {
 import calendarApi from "../api/calendarApi";
 import { convertEventToDateEvents } from "../helpers";
 import Swal from "sweetalert2";
-import { ca } from "date-fns/locale";
 
 export const useCalendarStore = () => {
   const dispatch = useDispatch();
@@ -85,7 +84,6 @@ export const useCalendarStore = () => {
 
       const events = convertEventToDateEvents(data.events);
       dispatch(onLoadEvents(events));
-      console.log({ events });
     } catch (error) {
       console.log("Error loading events");
       console.log(error);
